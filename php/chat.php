@@ -1,5 +1,5 @@
 <?php
-require_once('./vendor/autoload.php');
+require_once('vendor/autoload.php');
 require_once('Activity.php');
 require_once('config.php');
 
@@ -19,7 +19,7 @@ if( !isset($_SERVER['HTTP_REFERER']) ) {
   echo('channel name could not be determined from HTTP_REFERER');
 }
 
-$channel_name = get_channel_name($_SERVER['HTTP_REFERER']);
+$channel_name = get_db_channel_name();
 $options = sanitise_input($chat_info);
 
 $activity = new Activity('chat-message', $options['text'], $options);
@@ -39,6 +39,11 @@ function get_channel_name($http_referer) {
   $pattern = "/(\W)+/";
   $channel_name = preg_replace($pattern, '-', $http_referer);
   return $channel_name;
+}
+
+function get_db_channel_name() {
+
+    return 'test_channel123';
 }
 
 function sanitise_input($chat_info) {
