@@ -5,21 +5,17 @@ require_once('config.php');
 
 date_default_timezone_set('UTC');
 
-$chat_info = $_POST['chat_info'];
+$chat_info  = $_POST['chat_info'];
+$channel    = $_POST['channel'];
 
-$channel_name = null;
+$channel_name = $channel;
 
 if( !isset($_POST['chat_info']) ){
   header("HTTP/1.0 400 Bad Request");
   echo('chat_info must be provided');
 }
 
-if( !isset($_SERVER['HTTP_REFERER']) ) {
-  header("HTTP/1.0 400 Bad Request");
-  echo('channel name could not be determined from HTTP_REFERER');
-}
-
-$channel_name = get_db_channel_name();
+//$channel_name = get_db_channel_name();
 $options = sanitise_input($chat_info);
 
 $activity = new Activity('chat-message', $options['text'], $options);
@@ -34,17 +30,7 @@ header('Content-type: application/json');
 $result = array('activity' => $data, 'pusherResponse' => $response);
 echo(json_encode($result));
 
-function get_channel_name($http_referer) {
-  // not allowed :, / % #
-  $pattern = "/(\W)+/";
-  $channel_name = preg_replace($pattern, '-', $http_referer);
-  return $channel_name;
-}
 
-function get_db_channel_name() {
-
-    return 'test_channel123';
-}
 
 function sanitise_input($chat_info) {
   $email = isset($chat_info['email'])?$chat_info['email']:'';

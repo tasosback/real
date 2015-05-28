@@ -1,3 +1,13 @@
+<?php
+// Start the session
+session_start();
+
+if(!isset($_SESSION["chatId"])){
+    $_SESSION["chatId"] = 523161;
+}
+
+echo $_SESSION["chatId"];
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,15 +28,13 @@
         $(document).ready(function(){
             $( "#chat" ).on( "click", function() {
 
-
-
-
                 $.ajax({
                     url: 'php/chatHandler.php',
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        'action': 'getChannel'
+                        'action': 'getChannel',
+                        'userId': '123'
                     },
                     complete: function(xhr, status) {
 
@@ -35,13 +43,11 @@
                         var pusher = new Pusher("51877f0ea58c0460ad37")
 
                         var chatWidget = new PusherChatWidget(pusher, {
-                            appendTo: "#pusher_chat_widget"
+                            appendTo: "#pusher_chat_widget",
+                            channel:result.channelId
                         });
                     }
                 })
-
-
-
 
             });
         });

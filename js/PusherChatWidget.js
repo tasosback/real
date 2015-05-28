@@ -13,13 +13,13 @@ function PusherChatWidget(pusher, options) {
   this._pusher = pusher;
   this._autoScroll = true;
 
-
+console.log(options.channel);
   options = options || {};
 
   this.settings = $.extend({
     maxItems: 50,                           // max items to show in the UI. Items beyond this limit will be removed as new ones come in.
     chatEndPoint: 'php/chat.php',           // the end point where chat messages should be sanitized and then triggered
-    channelName: 'test_channel123',         // the name of the channel the chat will take place on
+    channelName: options.channel,         // the name of the channel the chat will take place on
     appendTo: document.body,                // A jQuery selector or object. Defines where the element should be appended to
     debug: true
   }, options);
@@ -126,7 +126,8 @@ PusherChatWidget.prototype._sendChatMessage = function(data) {
     type: 'post',
     dataType: 'json',
     data: {
-      'chat_info': data
+      'chat_info': data,
+      'channel':this.settings.channelName
     },
     complete: function(xhr, status) {
       Pusher.log('Chat message sent. Result: ' + status + ' : ' + xhr.responseText);
