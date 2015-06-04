@@ -19,7 +19,7 @@ function PusherChatWidget(pusher, options) {
   this.settings = $.extend({
     maxItems: 50,                           // max items to show in the UI. Items beyond this limit will be removed as new ones come in.
     chatEndPoint: 'php/chat.php',           // the end point where chat messages should be sanitized and then triggered
-    channelName: 'test_channel123',         // the name of the channel the chat will take place on
+    channelName: '523161_123',         // the name of the channel the chat will take place on
     appendTo: document.body,                // A jQuery selector or object. Defines where the element should be appended to
     debug: true
   }, options);
