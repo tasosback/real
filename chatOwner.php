@@ -12,6 +12,7 @@ echo $_SESSION["chatId"];
 <html>
 <head>
     <title>Chat Test</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet/less" type="text/css" href="lib/twitter-bootstrap/lib/bootstrap.less">
     <script src="lib/less/less-1.1.5.min.js"></script>
 
@@ -26,25 +27,24 @@ echo $_SESSION["chatId"];
     <script src="js/PusherChatWidgetOwner.js"></script>
     <script>
         $(document).ready(function(){
-            $( "#chat" ).on( "click", function() {
-
-
-                var pusher = new Pusher("51877f0ea58c0460ad37")
-
-                var chatWidget = new PusherChatWidget(pusher, {
-                    appendTo: "#pusher_chat_widget"
-                });
 
 
 
+            var pusher = new Pusher("51877f0ea58c0460ad37")
+
+            var chatWidget = new PusherChatWidget(pusher, {
+                appendTo: "#pusher_chat_widget",
+                nickname: "Συνεργείο"
             });
+
+            chatWidget._buildListHistory();
+
         });
     </script>
 </head>
 <body>
 <div class="row">
     <div class="container" style="margin-top: 30px;">
-    <a style="margin-left: 30px" id="chat" class="btn btn-primary">CHAT NOW</a>
     <div style="height: 50px;"></div>
     <div class="span5" id="pusher_chat_widget">
     </div>

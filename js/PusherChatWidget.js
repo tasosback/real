@@ -8,12 +8,13 @@
 function PusherChatWidget(pusher, options) {
 
   PusherChatWidget.instances.push(this);
+
   var self = this;
   
   this._pusher = pusher;
   this._autoScroll = true;
 
-console.log(options.channel);
+  console.log(options.channel);
   options = options || {};
 
   this.settings = $.extend({

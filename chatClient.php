@@ -25,6 +25,7 @@ echo $_SESSION["chatId"];
     <script src="http://js.pusher.com/3.0/pusher.min.js"></script>
     <script src="js/PusherChatWidget.js"></script>
     <script>
+
         $(document).ready(function(){
             $( "#chat" ).on( "click", function() {
 
@@ -50,16 +51,26 @@ echo $_SESSION["chatId"];
                 })
 
             });
+
+            $( "#chatClose" ).on( "click", function() {
+
+                $("#pusher_chat_widget").empty();
+
+            });
         });
+
     </script>
 </head>
 <body>
 <div class="row">
     <div class="container" style="margin-top: 30px;">
     <a style="margin-left: 30px" id="chat" class="btn btn-primary">CHAT NOW</a>
+    <a style="margin-left: 30px" id="chatClose" class="btn btn-primary">CLOSE</a>
     <div style="height: 50px;"></div>
+
     <div class="span5" id="pusher_chat_widget">
     </div>
+
     </div>
 </div>
 

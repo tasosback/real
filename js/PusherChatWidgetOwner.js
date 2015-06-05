@@ -45,7 +45,7 @@ function PusherChatWidget(pusher, options) {
   this._itemCount = 0;
   
   this._widget = PusherChatWidget._createHTML(this.settings.appendTo);
-  this._nicknameEl = this._widget.find('input[name=nickname]');
+  this._nicknameEl = options.nickname;
   this._emailEl = this._widget.find('input[name=email]');  
   this._messageInputEl = this._widget.find('textarea');
   this._messagesEl = this._widget.find('ul');
@@ -69,7 +69,7 @@ PusherChatWidget.instances = [];
 PusherChatWidget.prototype._chatMessageReceived = function(data) {
   var self = this;
   
-  if(this._itemCount === 0) {
+  if(this._itemCount === 0 ) {
     this._messagesEl.html('');
   }
   
@@ -96,12 +96,8 @@ PusherChatWidget.prototype._chatMessageReceived = function(data) {
 
 /* @private */
 PusherChatWidget.prototype._sendChatButtonClicked = function() {
-  var nickname = $.trim(this._nicknameEl.val()); // optional
+  var nickname = $.trim(this.settings.nickname) // optional
   var email = $.trim(this._emailEl.val()); // optional
-  if(!nickname) {
-    alert('please supply a nickname');
-    return;
-  }
   var message = $.trim(this._messageInputEl.val());
   if(!message) {
     alert('please supply a chat message');
@@ -126,7 +122,8 @@ PusherChatWidget.prototype._sendChatMessage = function(data) {
     type: 'post',
     dataType: 'json',
     data: {
-      'chat_info': data
+      'chat_info': data,
+      'channel': this.settings.channelName
     },
     complete: function(xhr, status) {
       Pusher.log('Chat message sent. Result: ' + status + ' : ' + xhr.responseText);
@@ -167,8 +164,6 @@ PusherChatWidget._createHTML = function(appendTo) {
   var html = '' +
   '<div class="pusher-chat-widget">' +
     '<div class="pusher-chat-widget-header">' +
-      '<label for="nickname">Name</label>' +
-      '<input type="text" name="nickname" />' +
       '<label for="email" title="So we can look up your Gravatar">Email (optional)</label>' +
       '<input type="email" name="email" />' +
     '</div>' +
@@ -234,6 +229,65 @@ PusherChatWidget._buildListItem = function(activity) {
                 
   
   return li;
+};
+
+
+/* @private */
+PusherChatWidget.prototype._buildListHistory = function() {
+
+    var activity            = new Object();
+    activity.body           = "Message body";
+    activity.published      = "Fri, 05 Jun 2015 13:58:43 +0000";
+    activity.actor          = new Object();
+    activity.actor.image    = "";
+
+
+    if(this._itemCount === 0) {
+        this._messagesEl.html('');
+    }
+
+    var li = $('<li class="activity"></li>');
+    li.attr('data-activity-id', 123);
+    var item = $('<div class="stream-item-content"></div>');
+    li.append(item);
+
+    var imageInfo = activity.actor.image;
+    var image = $('<div class="image">' +
+        '<img src="http://www.filecluster.com/howto/wp-content/uploads/2014/07/User-Default.jpg" width="48px" height="48px" />' +
+        '</div>');
+    item.append(image);
+
+    var content = $('<div class="content"></div>');
+    item.append(content);
+
+    var user = $('<div class="activity-row">' +
+        '<span class="user-name">' +
+        '<a class="screen-name" title="Client">' + 'Client' + '</a>' +
+        //'<span class="full-name">' + activity.actor.displayName + '</span>' +
+        '</span>' +
+        '</div>');
+    content.append(user);
+
+    var message = $('<div class="activity-row">' +
+        '<div class="text">' + activity.body.replace(/\\('|&quot;)/g, '$1') + '</div>' +
+        '</div>');
+    content.append(message);
+
+    var time = $('<div class="activity-row">' +
+        '<a ' + (activity.link?'href="' + activity.link + '" ':'') + ' class="timestamp">' +
+        '<span title="' + activity.published + '" data-activity-published="' + activity.published + '">' + PusherChatWidget.timeToDescription(activity.published) + '</span>' +
+        '</a>' +
+        '<span class="activity-actions">' +
+        /*'<span class="tweet-action action-favorite">' +
+         '<a href="#" class="like-action" data-activity="like" title="Like"><span><i></i><b>Like</b></span></a>' +
+         '</span>' +*/
+        '</span>' +
+        '</div>');
+    content.append(time);
+
+    this._messagesEl.append(li);
+    ++this._itemCount;
+    return false;
 };
 
 /**
